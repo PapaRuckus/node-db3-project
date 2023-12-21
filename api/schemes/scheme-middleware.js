@@ -19,7 +19,7 @@ const checkSchemeId = async (req, res, next) => {
         message: `scheme with scheme_id ${req.params.scheme_id} not found`,
       });
     } else {
-      next()
+      next();
     }
   } catch (error) {
     next(error);
@@ -35,11 +35,16 @@ const checkSchemeId = async (req, res, next) => {
   }
 */
 const validateScheme = async (req, res, next) => {
-  try {
-   const validate = await db('scheme').where('scheme_name', req.params.shceme_name).first()
-  } catch (error) {
-    next(error)
- }
+  const { scheme_name } = req.body;
+  if (
+    scheme_name === undefined ||
+    typeof scheme_name !== "string" ||
+    !scheme_name.trim()
+  ) {
+    next({ status: 400, message: "invalid scheme_name" });
+  } else {
+    next();
+  }
 };
 
 /*
